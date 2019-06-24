@@ -107,9 +107,9 @@ volDF2CubeK <- function(params, tbl, source = "CME") {
   
     matYears <- as.numeric(params$maturity-params$tradeDate)/365
     expYears <- as.numeric(params$expiryDate-params$tradeDate)/365
-    expLvl <- c( "1M","3M","6M","1Y","2Y","3Y","4Y",  "5Y",  "6Y",  "7Y",  "8Y",  "9Y","10Y")
+    expLvl <- c( "1D", "1M","3M","6M","1Y","2Y","3Y","4Y",  "5Y",  "6Y",  "7Y",  "8Y",  "9Y","10Y")
     tbl$Expiry <- factor(tbl$Expiry, levels  <-  expLvl)
-    expiries <- c(1/12,.25,.5,1,2,3,4,5,6,7,8,9,10)
+    expiries <- c(1/365,1/12,.25,.5,1,2,3,4,5,6,7,8,9,10)
     tenorLvl <- c( "1Y", "2Y",  "5Y",  "10Y","15Y","20Y","30Y")
     tbl$Tenor <- factor(tbl$Tenor, levels = tenorLvl)
     tenors <- c(1,2,5,10,15,20,30)

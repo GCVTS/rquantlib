@@ -43,7 +43,12 @@ namespace {
 
         QuantLib::Size numExp = expiries.size();
         for (Size i = 0; i <numExp ; i++){
-            if(expiries[i]<1.0){
+            if(expiries[i]<0.08333333){
+                int n = static_cast<int>(365*expiries[i]);
+
+                optionTenors.push_back(Days*n);
+                
+            } else if(expiries[i]<1.0){
                 int n = static_cast<int>(12*expiries[i]);
 
                 optionTenors.push_back(Months*n);
@@ -89,7 +94,10 @@ namespace {
         std::vector<Real> strikeSpreads;
 
         for (Size i = 0; i < numExp; i++){
-            if(expiries[i]<1.0){
+            if(expiries[i]<0.08333333){
+                int n = static_cast<int>(365*expiries[i]);
+                optionTenorsSmile.push_back(n*Days);
+            } else if(expiries[i]<1.0){
                 int n = static_cast<int>(12*expiries[i]);
                 optionTenorsSmile.push_back(n*Months);
             } else {
