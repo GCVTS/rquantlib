@@ -9,6 +9,10 @@ asianOptionEngine <- function(averageType, type, underlying, strike, dividendYie
     .Call(`_RQuantLib_asianOptionEngine`, averageType, type, underlying, strike, dividendYield, riskFreeRate, maturity, volatility, first, length, fixings)
 }
 
+bareblackengine <- function(rparam, legParams, dateVec, zeroVec) {
+    .Call(`_RQuantLib_bareblackengine`, rparam, legParams, dateVec, zeroVec)
+}
+
 binaryOptionEngine <- function(binType, type, excType, underlying, strike, dividendYield, riskFreeRate, maturity, volatility, cashPayoff) {
     .Call(`_RQuantLib_binaryOptionEngine`, binType, type, excType, underlying, strike, dividendYield, riskFreeRate, maturity, volatility, cashPayoff)
 }

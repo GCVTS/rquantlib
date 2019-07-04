@@ -22,6 +22,8 @@ export(
     "AffineSwaption",
     #"sabrengine",
     "SabrSwaption",
+    #"bareblackengine",
+    "BareBlackSwaption",
     "summary.G2Analytic",
     "summary.HWAnalytic",
     "summary.HWTree",
@@ -84,6 +86,7 @@ S3method("BarrierOption", "default")
 S3method("BermudanSwaption", "default")
 S3method("AffineSwaption", "default")
 S3method("SabrSwaption", "default")
+S3method("BareBlackSwaption", "default")
 
 S3method("BinaryOption", "default")
 S3method("BinaryOptionImpliedVolatility", "default")

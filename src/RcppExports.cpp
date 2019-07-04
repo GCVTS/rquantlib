@@ -46,6 +46,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// bareblackengine
+Rcpp::List bareblackengine(Rcpp::List rparam, Rcpp::List legParams, std::vector<QuantLib::Date> dateVec, std::vector<double> zeroVec);
+RcppExport SEXP _RQuantLib_bareblackengine(SEXP rparamSEXP, SEXP legParamsSEXP, SEXP dateVecSEXP, SEXP zeroVecSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type rparam(rparamSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type legParams(legParamsSEXP);
+    Rcpp::traits::input_parameter< std::vector<QuantLib::Date> >::type dateVec(dateVecSEXP);
+    Rcpp::traits::input_parameter< std::vector<double> >::type zeroVec(zeroVecSEXP);
+    rcpp_result_gen = Rcpp::wrap(bareblackengine(rparam, legParams, dateVec, zeroVec));
+    return rcpp_result_gen;
+END_RCPP
+}
 // binaryOptionEngine
 Rcpp::List binaryOptionEngine(std::string binType, std::string type, std::string excType, double underlying, double strike, double dividendYield, double riskFreeRate, double maturity, double volatility, double cashPayoff);
 RcppExport SEXP _RQuantLib_binaryOptionEngine(SEXP binTypeSEXP, SEXP typeSEXP, SEXP excTypeSEXP, SEXP underlyingSEXP, SEXP strikeSEXP, SEXP dividendYieldSEXP, SEXP riskFreeRateSEXP, SEXP maturitySEXP, SEXP volatilitySEXP, SEXP cashPayoffSEXP) {
@@ -1682,6 +1696,7 @@ RcppExport SEXP _rcpp_module_boot_BondsMod();
 static const R_CallMethodDef CallEntries[] = {
     {"_RQuantLib_affineWithRebuiltCurveEngine", (DL_FUNC) &_RQuantLib_affineWithRebuiltCurveEngine, 7},
     {"_RQuantLib_asianOptionEngine", (DL_FUNC) &_RQuantLib_asianOptionEngine, 11},
+    {"_RQuantLib_bareblackengine", (DL_FUNC) &_RQuantLib_bareblackengine, 4},
     {"_RQuantLib_binaryOptionEngine", (DL_FUNC) &_RQuantLib_binaryOptionEngine, 10},
     {"_RQuantLib_binaryOptionImpliedVolatilityEngine", (DL_FUNC) &_RQuantLib_binaryOptionImpliedVolatilityEngine, 9},
     {"_RQuantLib_barrierOptionEngine", (DL_FUNC) &_RQuantLib_barrierOptionEngine, 10},
