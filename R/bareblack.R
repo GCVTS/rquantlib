@@ -34,6 +34,14 @@ BareBlackSwaption.default <- function(params,
     if(is.null(params$vol)){
         stop("swaption vol not set", call.=FALSE)
     }
+    if(is.null(params$volType)){
+        params$volType="ShiftedLognormal"
+        warning("swaption volType not set, defaulting to \"ShiftedLognormal\"")
+    }
+    if(!(params$volType %in% c("Normal", "ShiftedLognormal"))){
+        stop("swaption volType must be \"Normal\" or \"ShiftedLognormal\"", call.=FALSE)
+    }
+    
 
     if(class(ts)=="DiscountCurve"){
         matchlegs<-matchParams(legparams)

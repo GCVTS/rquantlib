@@ -18,6 +18,7 @@ Rcpp::List bareblackengine(Rcpp::List rparam,
     QuantLib::Date maturity(Rcpp::as<QuantLib::Date>(rparam["maturity"]));
     double strike = Rcpp::as<double>(rparam["strike"]);
     double vol = Rcpp::as<double>(rparam["vol"]);
+    std::string volType = Rcpp::as<std::string>(rparam["volType"]);
     int floatFreq = Rcpp::as<int>(legParams["floatFreq"]);
 
     // BOOST_TEST_MESSAGE("Testing Markov functional vanilla engines...");
@@ -28,7 +29,7 @@ Rcpp::List bareblackengine(Rcpp::List rparam,
 
     QuantLib::ext::shared_ptr<IborIndex> iborIndex1(new Euribor(floatFreq * Months, yldCrv));
 
-    // create swaps for european swaption here to get atm fwd rate, these are ignored for bermudan  //
+    // create swaps for european swaption and get atm fwd rate //
     QuantLib::ext::shared_ptr<VanillaSwap> underlyingCall =
         MakeVanillaSwap(Years*(((maturity-expiryDate)/365.0)), iborIndex1, strike)
         .withEffectiveDate(expiryDate)
@@ -43,22 +44,28 @@ Rcpp::List bareblackengine(Rcpp::List rparam,
     underlyingCall->setPricingEngine(swapEngine);
     underlyingPut->setPricingEngine(swapEngine);
 
-    Real pricePay,priceRcv,rate;
-    rate=underlyingCall->fairRate();
+    Real rate=underlyingCall->fairRate();
     
-    // calculate european here //
-    QuantLib::ext::shared_ptr<BlackSwaptionEngine> blackSwaptionEngine1(new BlackSwaptionEngine(yldCrv, vol));
-
+    // calculate european //
     QuantLib::ext::shared_ptr<Exercise> exercise(new EuropeanExercise(startDate));
-
-    //     Rprintf("%d %d %d\n",outputs1.expiries_[i].dayOfMonth(),outputs1.expiries_[i].month(),outputs1.expiries_[i].year());
 
     Swaption swaptionC(underlyingCall, exercise);
     Swaption swaptionP(underlyingPut, exercise);
-    swaptionC.setPricingEngine(blackSwaptionEngine1);
-    swaptionP.setPricingEngine(blackSwaptionEngine1);
-    pricePay = swaptionC.NPV();
-    priceRcv = swaptionP.NPV();
+
+    if (volType == "ShiftedLognormal") {
+        QuantLib::ext::shared_ptr<BlackSwaptionEngine> blackSwaptionEngine1(new BlackSwaptionEngine(yldCrv, vol));
+        swaptionC.setPricingEngine(blackSwaptionEngine1);
+        swaptionP.setPricingEngine(blackSwaptionEngine1);
+    } else if (volType == "Normal") {
+        QuantLib::ext::shared_ptr<BachelierSwaptionEngine> bachelierSwaptionEngine1(new BachelierSwaptionEngine(yldCrv, vol));
+        swaptionC.setPricingEngine(bachelierSwaptionEngine1);
+        swaptionP.setPricingEngine(bachelierSwaptionEngine1);
+    } else {
+        Rcpp::stop("swaption volType must be \"Normal\" or \"ShiftedLognormal\"");
+    }
+
+    Real pricePay = swaptionC.NPV();
+    Real priceRcv = swaptionP.NPV();
 
     ////////men at work/////////////////
 
