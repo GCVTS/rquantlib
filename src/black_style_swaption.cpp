@@ -18,8 +18,8 @@ QuantLib::Period tenor(double x) {
 
 
 // [[Rcpp::export]]
-Rcpp::List black_style_swaption(Rcpp::List leg1,
-                                Rcpp::List leg2,
+Rcpp::List black_style_swaption(Rcpp::List call,
+                                Rcpp::List put,
                                 Rcpp::List exercise,
                                 double strike,
                                 double vol,
@@ -27,59 +27,59 @@ Rcpp::List black_style_swaption(Rcpp::List leg1,
                                 std::vector<QuantLib::Date> dateVec,
                                 std::vector<double> zeroVec){
 
-    Rcpp::List leg1_iborIndex = Rcpp::as<Rcpp::List>(leg1["iborIndex"]);
-    Rcpp::List leg1_pricingEngine = Rcpp::as<Rcpp::List>(leg1["pricingEngine"]);
-    Rcpp::List leg2_iborIndex = Rcpp::as<Rcpp::List>(leg2["iborIndex"]);
-    Rcpp::List leg2_pricingEngine = Rcpp::as<Rcpp::List>(leg2["pricingEngine"]);
+    Rcpp::List call_iborIndex = Rcpp::as<Rcpp::List>(call["iborIndex"]);
+    Rcpp::List call_pricingEngine = Rcpp::as<Rcpp::List>(call["pricingEngine"]);
+    Rcpp::List put_iborIndex = Rcpp::as<Rcpp::List>(put["iborIndex"]);
+    Rcpp::List put_pricingEngine = Rcpp::as<Rcpp::List>(put["pricingEngine"]);
     
     QuantLib::Handle<QuantLib::YieldTermStructure> yldCrv(rebuildCurveFromZeroRates(dateVec, zeroVec));
 
     // Create IborIndex objects for swaps
     IborIndex* iborIndex1;
-    if (Rcpp::as<std::string>(leg1_iborIndex["class"]) == "Euribor") {
-        iborIndex1 = new Euribor(tenor(Rcpp::as<double>(leg1_iborIndex["tenor"])), yldCrv);
-    } else if (Rcpp::as<std::string>(leg1_iborIndex["class"]) == "USDLibor") {
-        iborIndex1 = new USDLibor(tenor(Rcpp::as<double>(leg1_iborIndex["tenor"])), yldCrv);
+    if (Rcpp::as<std::string>(call_iborIndex["class"]) == "Euribor") {
+        iborIndex1 = new Euribor(tenor(Rcpp::as<double>(call_iborIndex["tenor"])), yldCrv);
+    } else if (Rcpp::as<std::string>(call_iborIndex["class"]) == "USDLibor") {
+        iborIndex1 = new USDLibor(tenor(Rcpp::as<double>(call_iborIndex["tenor"])), yldCrv);
     } else {
-        Rcpp::stop("'leg1$iborIndex$class' must be \"Euribor\" or \"USDLibor\"");
+        Rcpp::stop("'call$iborIndex$class' must be \"Euribor\" or \"USDLibor\"");
     }
     QuantLib::ext::shared_ptr<IborIndex> iborIndex1_ptr(iborIndex1);
 
     IborIndex* iborIndex2;
-    if (Rcpp::as<std::string>(leg2_iborIndex["class"]) == "Euribor") {
-        iborIndex2 = new Euribor(tenor(Rcpp::as<double>(leg1_iborIndex["tenor"])), yldCrv);
-    } else if (Rcpp::as<std::string>(leg2_iborIndex["class"]) == "USDLibor") {
-        iborIndex2 = new USDLibor(tenor(Rcpp::as<double>(leg1_iborIndex["tenor"])), yldCrv);
+    if (Rcpp::as<std::string>(put_iborIndex["class"]) == "Euribor") {
+        iborIndex2 = new Euribor(tenor(Rcpp::as<double>(call_iborIndex["tenor"])), yldCrv);
+    } else if (Rcpp::as<std::string>(put_iborIndex["class"]) == "USDLibor") {
+        iborIndex2 = new USDLibor(tenor(Rcpp::as<double>(call_iborIndex["tenor"])), yldCrv);
     } else {
-        Rcpp::stop("'leg2$iborIndex$class' must be \"Euribor\" or \"USDLibor\"");
+        Rcpp::stop("'put$iborIndex$class' must be \"Euribor\" or \"USDLibor\"");
     }
     QuantLib::ext::shared_ptr<IborIndex> iborIndex2_ptr(iborIndex2);
 
     // Create swaps
     QuantLib::ext::shared_ptr<VanillaSwap> underlyingCall =
-        MakeVanillaSwap(tenor(Rcpp::as<double>(leg1["tenor"])), iborIndex1_ptr, strike)
-        .withEffectiveDate(Rcpp::as<QuantLib::Date>(leg1["effectiveDate"]))
-        .receiveFixed(Rcpp::as<bool>(leg1["receiveFixed"]));
+        MakeVanillaSwap(tenor(Rcpp::as<double>(call["tenor"])), iborIndex1_ptr, strike)
+        .withEffectiveDate(Rcpp::as<QuantLib::Date>(call["effectiveDate"]))
+        .receiveFixed(Rcpp::as<bool>(call["receiveFixed"]));
 
     QuantLib::ext::shared_ptr<VanillaSwap> underlyingPut =
-        MakeVanillaSwap(tenor(Rcpp::as<double>(leg2["tenor"])), iborIndex2_ptr, strike)
-        .withEffectiveDate(Rcpp::as<QuantLib::Date>(leg2["effectiveDate"]))
-        .receiveFixed(Rcpp::as<bool>(leg2["receiveFixed"]));
+        MakeVanillaSwap(tenor(Rcpp::as<double>(put["tenor"])), iborIndex2_ptr, strike)
+        .withEffectiveDate(Rcpp::as<QuantLib::Date>(put["effectiveDate"]))
+        .receiveFixed(Rcpp::as<bool>(put["receiveFixed"]));
 
     // Create pricing engines for swaps
     PricingEngine* swapEngine1;
-    if (Rcpp::as<std::string>(leg1_pricingEngine["class"]) == "DiscountingSwapEngine") {
+    if (Rcpp::as<std::string>(call_pricingEngine["class"]) == "DiscountingSwapEngine") {
         swapEngine1 = new DiscountingSwapEngine(yldCrv);
     } else {
-        Rcpp::stop("'leg1$pricingEngine$class' must be \"DiscountingSwapEngine\"");
+        Rcpp::stop("'call$pricingEngine$class' must be \"DiscountingSwapEngine\"");
     }
     QuantLib::ext::shared_ptr<PricingEngine> swapEngine1_ptr(swapEngine1);
 
     PricingEngine* swapEngine2;
-    if (Rcpp::as<std::string>(leg2_pricingEngine["class"]) == "DiscountingSwapEngine") {
+    if (Rcpp::as<std::string>(put_pricingEngine["class"]) == "DiscountingSwapEngine") {
         swapEngine2 = new DiscountingSwapEngine(yldCrv);
     } else {
-        Rcpp::stop("'leg2$pricingEngine$class' must be \"DiscountingSwapEngine\"");
+        Rcpp::stop("'put$pricingEngine$class' must be \"DiscountingSwapEngine\"");
     }
     QuantLib::ext::shared_ptr<PricingEngine> swapEngine2_ptr(swapEngine2);
 

@@ -1,10 +1,10 @@
-BlackStyleSwaption <- function(ts, leg1, leg2, exercise, strike, vol, volType) {
+BlackStyleSwaption <- function(ts, call, put, exercise, strike, vol, volType) {
     UseMethod("BlackStyleSwaption")
 }
 
 BlackStyleSwaption.default  <- function(
     ts,
-    leg1 = list(
+    call = list(
         class = "VanillaSwap",
         iborIndex = list(
             class = "Euribor",  # or "USDLibor"
@@ -17,7 +17,7 @@ BlackStyleSwaption.default  <- function(
         effectiveDate,
         receiveFixed = FALSE
     ),
-    leg2 = list(
+    put = list(
         class = "VanillaSwap",
         iborIndex = list(
             class = "Euribor",  # or "USDLibor"
@@ -42,120 +42,120 @@ BlackStyleSwaption.default  <- function(
         stop("'ts' must be DiscountCurve")
     }
 
-    if (!is.list(leg1) || length(leg1) == 0) {
-        stop("'leg1' must be a non-empty list")
+    if (!is.list(call) || length(call) == 0) {
+        stop("'call' must be a non-empty list")
     }
-    if(is.null(leg1$class)){
-        leg1$class = "VanillaSwap"
-        warning("'leg1$class' not set, defaulting to \"VanillaSwap\"")
+    if(is.null(call$class)){
+        call$class = "VanillaSwap"
+        warning("'call$class' not set, defaulting to \"VanillaSwap\"")
     }
-    if(!(leg1$class %in% c("VanillaSwap"))){
-        stop("'leg1$class' must be \"VanillaSwap\"")
+    if(!(call$class %in% c("VanillaSwap"))){
+        stop("'call$class' must be \"VanillaSwap\"")
     }
-    if (!is.list(leg1$iborIndex) || length(leg1$iborIndex) == 0) {
-        stop("'leg1$iborIndex' must be a non-empty list")
+    if (!is.list(call$iborIndex) || length(call$iborIndex) == 0) {
+        stop("'call$iborIndex' must be a non-empty list")
     }
-    if(is.null(leg1$iborIndex$class)){
-        leg1$iborIndex$class = "Euribor"
-        warning("'leg1$iborIndex$class' not set, defaulting to \"Euribor\"")
+    if(is.null(call$iborIndex$class)){
+        call$iborIndex$class = "Euribor"
+        warning("'call$iborIndex$class' not set, defaulting to \"Euribor\"")
     }
-    if(!(leg1$iborIndex$class %in% c("Euribor", "USDLibor"))){
-        stop("'leg1$iborIndex$class' must be \"Euribor\" or \"USDLibor\"")
+    if(!(call$iborIndex$class %in% c("Euribor", "USDLibor"))){
+        stop("'call$iborIndex$class' must be \"Euribor\" or \"USDLibor\"")
     }
-    if(is.null(leg1$iborIndex$tenor)){
-        leg1$iborIndex$tenor = 6 * Period$Months
-        warning("'leg1$iborIndex$tenor' not set, defaulting to 6 months")
+    if(is.null(call$iborIndex$tenor)){
+        call$iborIndex$tenor = 6 * Period$Months
+        warning("'call$iborIndex$tenor' not set, defaulting to 6 months")
     }
-    if(!is.numeric(leg1$iborIndex$tenor)){
-        stop("'leg1$iborIndex$tenor' must be numeric")
+    if(!is.numeric(call$iborIndex$tenor)){
+        stop("'call$iborIndex$tenor' must be numeric")
     }
-    if (!is.list(leg1$pricingEngine) || length(leg1$pricingEngine) == 0) {
-        stop("'leg1$pricingEngine' must be a non-empty list")
+    if (!is.list(call$pricingEngine) || length(call$pricingEngine) == 0) {
+        stop("'call$pricingEngine' must be a non-empty list")
     }
-    if(is.null(leg1$pricingEngine$class)){
-        leg1$pricingEngine$class = "DiscountingSwapEngine"
-        warning("'leg1$pricingEngine$class' not set, defaulting to \"DiscountingSwapEngine\"")
+    if(is.null(call$pricingEngine$class)){
+        call$pricingEngine$class = "DiscountingSwapEngine"
+        warning("'call$pricingEngine$class' not set, defaulting to \"DiscountingSwapEngine\"")
     }
-    if(!(leg1$pricingEngine$class %in% c("DiscountingSwapEngine"))){
-        stop("'leg1$pricingEngine$class' must be \"DiscountingSwapEngine\"")
+    if(!(call$pricingEngine$class %in% c("DiscountingSwapEngine"))){
+        stop("'call$pricingEngine$class' must be \"DiscountingSwapEngine\"")
     }
-    if(is.null(leg1$tenor)){
-        leg1$tenor = 10 * Period$Years
-        warning("'leg1$tenor' not set, defaulting to 10 years")
+    if(is.null(call$tenor)){
+        call$tenor = 10 * Period$Years
+        warning("'call$tenor' not set, defaulting to 10 years")
     }
-    if(!is.numeric(leg1$tenor)){
-        stop("'leg1$tenor' must be numeric")
+    if(!is.numeric(call$tenor)){
+        stop("'call$tenor' must be numeric")
     }
-    if(is.null(leg1$effectiveDate)){
-        stop("'leg1$effectiveDate' not set")
+    if(is.null(call$effectiveDate)){
+        stop("'call$effectiveDate' not set")
     }
-    if(class(leg1$effectiveDate) != "Date"){
-        stop("'leg1$effectiveDate' must be Date")
+    if(class(call$effectiveDate) != "Date"){
+        stop("'call$effectiveDate' must be Date")
     }
-    if(is.null(leg1$receiveFixed)){
-        leg1$receiveFixed = FALSE
-        warning("'leg1$receiveFixed' not set, defaulting to FALSE")
+    if(is.null(call$receiveFixed)){
+        call$receiveFixed = FALSE
+        warning("'call$receiveFixed' not set, defaulting to FALSE")
     }
-    if(!is.logical(leg1$receiveFixed)){
-        stop("'leg1$receiveFixed' must be logical")
+    if(!is.logical(call$receiveFixed)){
+        stop("'call$receiveFixed' must be logical")
     }
 
-    if (!is.list(leg2) || length(leg2) == 0) {
-        stop("'leg2' must be a non-empty list")
+    if (!is.list(put) || length(put) == 0) {
+        stop("'put' must be a non-empty list")
     }
-    if(is.null(leg2$class)){
-        leg2$class = "VanillaSwap"
-        warning("'leg2$class' not set, defaulting to \"VanillaSwap\"")
+    if(is.null(put$class)){
+        put$class = "VanillaSwap"
+        warning("'put$class' not set, defaulting to \"VanillaSwap\"")
     }
-    if(!(leg2$class %in% c("VanillaSwap"))){
-        stop("'leg2$class' must be \"VanillaSwap\"")
+    if(!(put$class %in% c("VanillaSwap"))){
+        stop("'put$class' must be \"VanillaSwap\"")
     }
-    if (!is.list(leg2$iborIndex) || length(leg2$iborIndex) == 0) {
-        stop("'leg2$iborIndex' must be a non-empty list")
+    if (!is.list(put$iborIndex) || length(put$iborIndex) == 0) {
+        stop("'put$iborIndex' must be a non-empty list")
     }
-    if(is.null(leg2$iborIndex$class)){
-        leg2$iborIndex$class = "Euribor"
-        warning("'leg2$iborIndex$class' not set, defaulting to \"Euribor\"")
+    if(is.null(put$iborIndex$class)){
+        put$iborIndex$class = "Euribor"
+        warning("'put$iborIndex$class' not set, defaulting to \"Euribor\"")
     }
-    if(!(leg2$iborIndex$class %in% c("Euribor", "USDLibor"))){
-        stop("'leg2$iborIndex$class' must be \"Euribor\" or \"USDLibor\"")
+    if(!(put$iborIndex$class %in% c("Euribor", "USDLibor"))){
+        stop("'put$iborIndex$class' must be \"Euribor\" or \"USDLibor\"")
     }
-    if(is.null(leg2$iborIndex$tenor)){
-        leg2$iborIndex$tenor = 6 * Period$Months
-        warning("'leg2$iborIndex$tenor' not set, defaulting to 6 months")
+    if(is.null(put$iborIndex$tenor)){
+        put$iborIndex$tenor = 6 * Period$Months
+        warning("'put$iborIndex$tenor' not set, defaulting to 6 months")
     }
-    if(!is.numeric(leg2$iborIndex$tenor)){
-        stop("'leg2$iborIndex$tenor' must be numeric")
+    if(!is.numeric(put$iborIndex$tenor)){
+        stop("'put$iborIndex$tenor' must be numeric")
     }
-    if (!is.list(leg2$pricingEngine) || length(leg2$pricingEngine) == 0) {
-        stop("'leg2$pricingEngine' must be a non-empty list")
+    if (!is.list(put$pricingEngine) || length(put$pricingEngine) == 0) {
+        stop("'put$pricingEngine' must be a non-empty list")
     }
-    if(is.null(leg2$pricingEngine$class)){
-        leg2$pricingEngine$class = "DiscountingSwapEngine"
-        warning("'leg2$pricingEngine$class' not set, defaulting to \"DiscountingSwapEngine\"")
+    if(is.null(put$pricingEngine$class)){
+        put$pricingEngine$class = "DiscountingSwapEngine"
+        warning("'put$pricingEngine$class' not set, defaulting to \"DiscountingSwapEngine\"")
     }
-    if(!(leg2$pricingEngine$class %in% c("DiscountingSwapEngine"))){
-        stop("'leg2$pricingEngine$class' must be \"DiscountingSwapEngine\"")
+    if(!(put$pricingEngine$class %in% c("DiscountingSwapEngine"))){
+        stop("'put$pricingEngine$class' must be \"DiscountingSwapEngine\"")
     }
-    if(is.null(leg2$tenor)){
-        leg2$tenor = 10 * Period$Years
-        warning("'leg2$tenor' not set, defaulting to 10 years")
+    if(is.null(put$tenor)){
+        put$tenor = 10 * Period$Years
+        warning("'put$tenor' not set, defaulting to 10 years")
     }
-    if(!is.numeric(leg2$tenor)){
-        stop("'leg2$tenor' must be numeric")
+    if(!is.numeric(put$tenor)){
+        stop("'put$tenor' must be numeric")
     }
-    if(is.null(leg2$effectiveDate)){
-        stop("'leg2$effectiveDate' not set")
+    if(is.null(put$effectiveDate)){
+        stop("'put$effectiveDate' not set")
     }
-    if(class(leg2$effectiveDate) != "Date"){
-        stop("'leg2$effectiveDate' must be Date")
+    if(class(put$effectiveDate) != "Date"){
+        stop("'put$effectiveDate' must be Date")
     }
-    if(is.null(leg2$receiveFixed)){
-        leg2$receiveFixed = TRUE
-        warning("'leg2$receiveFixed' not set, defaulting to TRUE")
+    if(is.null(put$receiveFixed)){
+        put$receiveFixed = TRUE
+        warning("'put$receiveFixed' not set, defaulting to TRUE")
     }
-    if(!is.logical(leg2$receiveFixed)){
-        stop("'leg2$receiveFixed' must be logical")
+    if(!is.logical(put$receiveFixed)){
+        stop("'put$receiveFixed' must be logical")
     }
 
     if (!is.list(exercise) || length(exercise) == 0) {
@@ -187,12 +187,12 @@ BlackStyleSwaption.default  <- function(
         stop("'volType' must be \"ShiftedLognormal\" or \"Normal\"")
     }
     
-    val <- black_style_swaption(leg1, leg2, exercise, strike, vol, volType,
+    val <- black_style_swaption(call, put, exercise, strike, vol, volType,
                                 ts$table$date, ts$table$zeroRates) 
     val$params = list(
         ts = ts,
-        leg1 = leg1,
-        leg2 = leg2,
+        call = call,
+        put = put,
         exercise = exercise,
         strike = strike,
         vol = vol,
