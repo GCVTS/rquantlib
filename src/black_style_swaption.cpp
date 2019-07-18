@@ -73,7 +73,7 @@ Rcpp::List black_style_swaption(Rcpp::List leg1,
     underlyingCall->setPricingEngine(swapEngine1_ptr);
     underlyingPut->setPricingEngine(swapEngine2_ptr);
 
-    Real rate=underlyingCall->fairRate();
+    Real rate = underlyingCall->fairRate();
     
     // Create Exercise object for swaptions
     Exercise* exercise1;

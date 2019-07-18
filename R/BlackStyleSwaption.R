@@ -89,7 +89,7 @@ BlackStyleSwaption.default  <- function(
     if(is.null(leg1$effectiveDate)){
         stop("'leg1$effectiveDate' not set")
     }
-    if(!is.Date(leg1$effectiveDate)){
+    if(class(leg1$effectiveDate) != "Date"){
         stop("'leg1$effectiveDate' must be Date")
     }
     if(is.null(leg1$receiveFixed)){
@@ -147,7 +147,7 @@ BlackStyleSwaption.default  <- function(
     if(is.null(leg2$effectiveDate)){
         stop("'leg2$effectiveDate' not set")
     }
-    if(!is.Date(leg2$effectiveDate)){
+    if(class(leg2$effectiveDate) != "Date"){
         stop("'leg2$effectiveDate' must be Date")
     }
     if(is.null(leg2$receiveFixed)){
@@ -171,7 +171,7 @@ BlackStyleSwaption.default  <- function(
     if(is.null(exercise$date)){
         stop("'exercise$date' not set")
     }
-    if(!is.Date(exercise$date)){
+    if(class(exercise$date) != "Date"){
         stop("'exercise$date' must be Date")
     }
    
