@@ -194,8 +194,8 @@ BlackStyleSwaption.default  <- function(
         stop("'put$receiveFixed' must be logical", call. = FALSE)
     }
 
-    if (!is.list(exercise)) {
-        exercise = list()
+    if (!is.list(exercise) || length(exercise) == 0) {
+        stop("'exercise' must be a non-empty list")
     }
     if(is.null(exercise$class)){
         exercise$class = "EuropeanExercise"
