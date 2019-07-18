@@ -10,6 +10,12 @@ BlackStyleSwaption.default  <- function(
             class = "Euribor",  # or "USDLibor"
             tenor = 6 * Period$Months
         ),
+        fixedLeg = list(
+            tenor = NULL  # set according to ibor currency and swap tenor
+        ),
+        floatingLeg = list(
+            tenor = NULL  # set according to ibor currency and swap tenor
+        ),
         pricingEngine = list(
             class = "DiscountingSwapEngine"
         ),
@@ -22,6 +28,12 @@ BlackStyleSwaption.default  <- function(
         iborIndex = list(
             class = "Euribor",  # or "USDLibor"
             tenor = 6 * Period$Months
+        ),
+        fixedLeg = list(
+            tenor = NULL  # set according to ibor currency and swap tenor
+        ),
+        floatingLeg = list(
+            tenor = NULL  # set according to ibor currency and swap tenor
         ),
         pricingEngine = list(
             class = "DiscountingSwapEngine"
@@ -68,6 +80,18 @@ BlackStyleSwaption.default  <- function(
     }
     if(!is.numeric(call$iborIndex$tenor)){
         stop("'call$iborIndex$tenor' must be numeric")
+    }
+    if(!is.list(call$fixedLeg)){
+        call$fixedLeg = list()
+    }
+    if(!("tenor" %in% names(call$fixedLeg))){
+        call$fixedLeg <- c(call$fixedLeg, list(tenor = NULL))
+    }
+    if(!is.list(call$floatingLeg)){
+        call$floatingLeg = list()
+    }
+    if(!("tenor" %in% names(call$floatingLeg))){
+        call$floatingLeg <- c(call$floatingLeg, list(tenor = NULL))
     }
     if (!is.list(call$pricingEngine) || length(call$pricingEngine) == 0) {
         stop("'call$pricingEngine' must be a non-empty list")
@@ -126,6 +150,18 @@ BlackStyleSwaption.default  <- function(
     }
     if(!is.numeric(put$iborIndex$tenor)){
         stop("'put$iborIndex$tenor' must be numeric")
+    }
+    if(!is.list(put$fixedLeg)){
+        put$fixedLeg = list()
+    }
+    if(!("tenor" %in% names(put$fixedLeg))){
+        put$fixedLeg <- c(put$fixedLeg, list(tenor = NULL))
+    }
+    if(!is.list(put$floatingLeg)){
+        put$floatingLeg = list()
+    }
+    if(!("tenor" %in% names(put$floatingLeg))){
+        put$floatingLeg <- c(put$floatingLeg, list(tenor = NULL))
     }
     if (!is.list(put$pricingEngine) || length(put$pricingEngine) == 0) {
         stop("'put$pricingEngine' must be a non-empty list")
