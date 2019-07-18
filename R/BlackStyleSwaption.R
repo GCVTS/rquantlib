@@ -64,8 +64,8 @@ BlackStyleSwaption.default  <- function(
     if(!(call$class %in% c("VanillaSwap"))){
         stop("'call$class' must be \"VanillaSwap\"")
     }
-    if (!is.list(call$iborIndex) || length(call$iborIndex) == 0) {
-        stop("'call$iborIndex' must be a non-empty list")
+    if (!is.list(call$iborIndex)) {
+        call$iborIndex = list()
     }
     if(is.null(call$iborIndex$class)){
         call$iborIndex$class = "Euribor"
@@ -93,8 +93,8 @@ BlackStyleSwaption.default  <- function(
     if(!("tenor" %in% names(call$floatingLeg))){
         call$floatingLeg <- c(call$floatingLeg, list(tenor = NULL))
     }
-    if (!is.list(call$pricingEngine) || length(call$pricingEngine) == 0) {
-        stop("'call$pricingEngine' must be a non-empty list")
+    if (!is.list(call$pricingEngine)) {
+        call$pricingEngine = list()
     }
     if(is.null(call$pricingEngine$class)){
         call$pricingEngine$class = "DiscountingSwapEngine"
@@ -134,8 +134,8 @@ BlackStyleSwaption.default  <- function(
     if(!(put$class %in% c("VanillaSwap"))){
         stop("'put$class' must be \"VanillaSwap\"")
     }
-    if (!is.list(put$iborIndex) || length(put$iborIndex) == 0) {
-        stop("'put$iborIndex' must be a non-empty list")
+    if (!is.list(put$iborIndex)) {
+        put$iborIndex = list()
     }
     if(is.null(put$iborIndex$class)){
         put$iborIndex$class = "Euribor"
@@ -163,8 +163,8 @@ BlackStyleSwaption.default  <- function(
     if(!("tenor" %in% names(put$floatingLeg))){
         put$floatingLeg <- c(put$floatingLeg, list(tenor = NULL))
     }
-    if (!is.list(put$pricingEngine) || length(put$pricingEngine) == 0) {
-        stop("'put$pricingEngine' must be a non-empty list")
+    if (!is.list(put$pricingEngine)) {
+        put$pricingEngine = list()
     }
     if(is.null(put$pricingEngine$class)){
         put$pricingEngine$class = "DiscountingSwapEngine"
@@ -194,8 +194,8 @@ BlackStyleSwaption.default  <- function(
         stop("'put$receiveFixed' must be logical")
     }
 
-    if (!is.list(exercise) || length(exercise) == 0) {
-        stop("'exercise' must be a non-empty list")
+    if (!is.list(exercise)) {
+        exercise = list()
     }
     if(is.null(exercise$class)){
         exercise$class = "EuropeanExercise"
