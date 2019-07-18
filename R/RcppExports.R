@@ -33,6 +33,10 @@ bermudanWithRebuiltCurveEngine <- function(rparam, dateVec, zeroVec, swaptionMat
     .Call(`_RQuantLib_bermudanWithRebuiltCurveEngine`, rparam, dateVec, zeroVec, swaptionMat, swapLengths, swaptionVols)
 }
 
+black_style_swaption <- function(leg1, leg2, exercise, strike, vol, volType, dateVec, zeroVec) {
+    .Call(`_RQuantLib_black_style_swaption`, leg1, leg2, exercise, strike, vol, volType, dateVec, zeroVec)
+}
+
 zeroPriceByYieldEngine <- function(yield, faceAmount, dayCounter, frequency, businessDayConvention, compound, maturityDate, issueDate) {
     .Call(`_RQuantLib_zeroPriceByYieldEngine`, yield, faceAmount, dayCounter, frequency, businessDayConvention, compound, maturityDate, issueDate)
 }

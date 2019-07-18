@@ -150,6 +150,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// black_style_swaption
+Rcpp::List black_style_swaption(Rcpp::List leg1, Rcpp::List leg2, Rcpp::List exercise, double strike, double vol, std::string volType, std::vector<QuantLib::Date> dateVec, std::vector<double> zeroVec);
+RcppExport SEXP _RQuantLib_black_style_swaption(SEXP leg1SEXP, SEXP leg2SEXP, SEXP exerciseSEXP, SEXP strikeSEXP, SEXP volSEXP, SEXP volTypeSEXP, SEXP dateVecSEXP, SEXP zeroVecSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type leg1(leg1SEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type leg2(leg2SEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type exercise(exerciseSEXP);
+    Rcpp::traits::input_parameter< double >::type strike(strikeSEXP);
+    Rcpp::traits::input_parameter< double >::type vol(volSEXP);
+    Rcpp::traits::input_parameter< std::string >::type volType(volTypeSEXP);
+    Rcpp::traits::input_parameter< std::vector<QuantLib::Date> >::type dateVec(dateVecSEXP);
+    Rcpp::traits::input_parameter< std::vector<double> >::type zeroVec(zeroVecSEXP);
+    rcpp_result_gen = Rcpp::wrap(black_style_swaption(leg1, leg2, exercise, strike, vol, volType, dateVec, zeroVec));
+    return rcpp_result_gen;
+END_RCPP
+}
 // zeroPriceByYieldEngine
 double zeroPriceByYieldEngine(double yield, double faceAmount, double dayCounter, double frequency, double businessDayConvention, double compound, QuantLib::Date maturityDate, QuantLib::Date issueDate);
 static SEXP _RQuantLib_zeroPriceByYieldEngine_try(SEXP yieldSEXP, SEXP faceAmountSEXP, SEXP dayCounterSEXP, SEXP frequencySEXP, SEXP businessDayConventionSEXP, SEXP compoundSEXP, SEXP maturityDateSEXP, SEXP issueDateSEXP) {
@@ -1702,6 +1720,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RQuantLib_barrierOptionEngine", (DL_FUNC) &_RQuantLib_barrierOptionEngine, 10},
     {"_RQuantLib_bermudanFromYieldEngine", (DL_FUNC) &_RQuantLib_bermudanFromYieldEngine, 5},
     {"_RQuantLib_bermudanWithRebuiltCurveEngine", (DL_FUNC) &_RQuantLib_bermudanWithRebuiltCurveEngine, 6},
+    {"_RQuantLib_black_style_swaption", (DL_FUNC) &_RQuantLib_black_style_swaption, 8},
     {"_RQuantLib_zeroPriceByYieldEngine", (DL_FUNC) &_RQuantLib_zeroPriceByYieldEngine, 8},
     {"_RQuantLib_zeroYieldByPriceEngine", (DL_FUNC) &_RQuantLib_zeroYieldByPriceEngine, 8},
     {"_RQuantLib_fixedRateBondYieldByPriceEngine", (DL_FUNC) &_RQuantLib_fixedRateBondYieldByPriceEngine, 13},
