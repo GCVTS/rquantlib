@@ -3,6 +3,20 @@
 using namespace QuantLib;
 
 
+QuantLib::Period tenor(double x) {
+    if (x < 0.08333333){
+        int n = static_cast<int>(365 * x);
+        return Days * n;
+    } else if (x < 1.0){
+        int n = static_cast<int>(12 * x);
+        return Months * n;
+    } else {
+        int n = static_cast<int>(x);
+        return Years * n;
+    }
+}
+
+
 // [[Rcpp::export]]
 Rcpp::List black_style_swaption(Rcpp::List leg1,
                                 Rcpp::List leg2,
@@ -23,9 +37,9 @@ Rcpp::List black_style_swaption(Rcpp::List leg1,
     // Create IborIndex objects for swaps
     IborIndex* iborIndex1;
     if (Rcpp::as<std::string>(leg1_iborIndex["class"]) == "Euribor") {
-        iborIndex1 = new Euribor(Rcpp::as<double>(leg1_iborIndex["tenor"]) * Years, yldCrv);
+        iborIndex1 = new Euribor(tenor(Rcpp::as<double>(leg1_iborIndex["tenor"])), yldCrv);
     } else if (Rcpp::as<std::string>(leg1_iborIndex["class"]) == "USDLibor") {
-        iborIndex1 = new USDLibor(Rcpp::as<double>(leg1_iborIndex["tenor"]) * Years, yldCrv);
+        iborIndex1 = new USDLibor(tenor(Rcpp::as<double>(leg1_iborIndex["tenor"])), yldCrv);
     } else {
         Rcpp::stop("'leg1$iborIndex$class' must be \"Euribor\" or \"USDLibor\"");
     }
@@ -33,9 +47,9 @@ Rcpp::List black_style_swaption(Rcpp::List leg1,
 
     IborIndex* iborIndex2;
     if (Rcpp::as<std::string>(leg2_iborIndex["class"]) == "Euribor") {
-        iborIndex2 = new Euribor(Rcpp::as<double>(leg2_iborIndex["tenor"]) * Years, yldCrv);
+        iborIndex2 = new Euribor(tenor(Rcpp::as<double>(leg1_iborIndex["tenor"])), yldCrv);
     } else if (Rcpp::as<std::string>(leg2_iborIndex["class"]) == "USDLibor") {
-        iborIndex2 = new USDLibor(Rcpp::as<double>(leg2_iborIndex["tenor"]) * Years, yldCrv);
+        iborIndex2 = new USDLibor(tenor(Rcpp::as<double>(leg1_iborIndex["tenor"])), yldCrv);
     } else {
         Rcpp::stop("'leg2$iborIndex$class' must be \"Euribor\" or \"USDLibor\"");
     }
@@ -43,12 +57,12 @@ Rcpp::List black_style_swaption(Rcpp::List leg1,
 
     // Create swaps
     QuantLib::ext::shared_ptr<VanillaSwap> underlyingCall =
-        MakeVanillaSwap(Rcpp::as<double>(leg1["tenor"]) * Years, iborIndex1_ptr, strike)
+        MakeVanillaSwap(tenor(Rcpp::as<double>(leg1["tenor"])), iborIndex1_ptr, strike)
         .withEffectiveDate(Rcpp::as<QuantLib::Date>(leg1["effectiveDate"]))
         .receiveFixed(Rcpp::as<bool>(leg1["receiveFixed"]));
 
     QuantLib::ext::shared_ptr<VanillaSwap> underlyingPut =
-        MakeVanillaSwap(Rcpp::as<double>(leg2["tenor"]) * Years, iborIndex2_ptr, strike)
+        MakeVanillaSwap(tenor(Rcpp::as<double>(leg2["tenor"])), iborIndex2_ptr, strike)
         .withEffectiveDate(Rcpp::as<QuantLib::Date>(leg2["effectiveDate"]))
         .receiveFixed(Rcpp::as<bool>(leg2["receiveFixed"]));
 
