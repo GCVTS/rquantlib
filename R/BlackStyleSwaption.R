@@ -20,7 +20,7 @@ BlackStyleSwaption.default  <- function(
             class = "DiscountingSwapEngine"
         ),
         tenor = 10 * Period$Years,
-        effectiveDate,
+        effectiveDate = NULL,
         receiveFixed = FALSE
     ),
     put = list(
@@ -39,12 +39,12 @@ BlackStyleSwaption.default  <- function(
             class = "DiscountingSwapEngine"
         ),
         tenor = 10 * Period$Years,
-        effectiveDate,
+        effectiveDate = NULL,
         receiveFixed = TRUE
     ),
     exercise = list(
         class = "EuropeanExercise",
-        date
+        date = NULL
     ),
     strike,
     vol,
@@ -111,7 +111,8 @@ BlackStyleSwaption.default  <- function(
         stop("'call$tenor' must be numeric", call. = FALSE)
     }
     if(is.null(call$effectiveDate)){
-        stop("'call$effectiveDate' not set", call. = FALSE)
+        call$effectiveDate = advance("UnitedStates", getEvaluationDate(), 1, 3)
+        warning("'call$effectiveDate' not set, defaulting to 1 year from evaluation date using US calendar", call. = FALSE)
     }
     if(class(call$effectiveDate) != "Date"){
         stop("'call$effectiveDate' must be Date", call. = FALSE)
@@ -181,7 +182,8 @@ BlackStyleSwaption.default  <- function(
         stop("'put$tenor' must be numeric", call. = FALSE)
     }
     if(is.null(put$effectiveDate)){
-        stop("'put$effectiveDate' not set", call. = FALSE)
+        put$effectiveDate = advance("UnitedStates", getEvaluationDate(), 1, 3)
+        warning("'put$effectiveDate' not set, defaulting to 1 year from evaluation date using US calendar", call. = FALSE)
     }
     if(class(put$effectiveDate) != "Date"){
         stop("'put$effectiveDate' must be Date", call. = FALSE)
@@ -195,7 +197,7 @@ BlackStyleSwaption.default  <- function(
     }
 
     if (!is.list(exercise) || length(exercise) == 0) {
-        stop("'exercise' must be a non-empty list")
+        stop("'exercise' must be a non-empty list", call. = FALSE)
     }
     if(is.null(exercise$class)){
         exercise$class = "EuropeanExercise"
@@ -205,7 +207,8 @@ BlackStyleSwaption.default  <- function(
         stop("'exercise$class' must be \"EuropeanExercise\"", call. = FALSE)
     }
     if(is.null(exercise$date)){
-        stop("'exercise$date' not set", call. = FALSE)
+        exercise$date = advance("UnitedStates", getEvaluationDate(), 1, 3)
+        warning("'exercise$date' not set, defaulting to 1 year from evaluation date using US calendar", call. = FALSE)
     }
     if(class(exercise$date) != "Date"){
         stop("'exercise$date' must be Date", call. = FALSE)

@@ -177,6 +177,10 @@ setEvaluationDate <- function(evalDate) {
     .Call(`_RQuantLib_setEvaluationDate`, evalDate)
 }
 
+getEvaluationDate <- function() {
+    .Call(`_RQuantLib_getEvaluationDate`)
+}
+
 discountCurveEngine <- function(rparams, tslist, times, legParams) {
     .Call(`_RQuantLib_discountCurveEngine`, rparams, tslist, times, legParams)
 }

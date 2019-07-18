@@ -486,6 +486,27 @@ namespace RQuantLib {
         return Rcpp::as<bool >(rcpp_result_gen);
     }
 
+    inline QuantLib::Date getEvaluationDate() {
+        typedef SEXP(*Ptr_getEvaluationDate)();
+        static Ptr_getEvaluationDate p_getEvaluationDate = NULL;
+        if (p_getEvaluationDate == NULL) {
+            validateSignature("QuantLib::Date(*getEvaluationDate)()");
+            p_getEvaluationDate = (Ptr_getEvaluationDate)R_GetCCallable("RQuantLib", "_RQuantLib_getEvaluationDate");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_getEvaluationDate();
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<QuantLib::Date >(rcpp_result_gen);
+    }
+
     inline double europeanOptionImpliedVolatilityEngine(std::string type, double value, double underlying, double strike, double dividendYield, double riskFreeRate, double maturity, double volatility) {
         typedef SEXP(*Ptr_europeanOptionImpliedVolatilityEngine)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_europeanOptionImpliedVolatilityEngine p_europeanOptionImpliedVolatilityEngine = NULL;

@@ -56,3 +56,8 @@ bool setEvaluationDate(QuantLib::Date evalDate) {
     QuantLib::Settings::instance().evaluationDate() = evalDate;
     return true;
 }
+
+// [[Rcpp::export]]
+QuantLib::Date getEvaluationDate() {
+    return QuantLib::Settings::instance().evaluationDate();
+}
