@@ -11,10 +11,12 @@ BlackStyleSwaption.default  <- function(
             tenor = 6 * Period$Months
         ),
         fixedLeg = list(
-            tenor = NULL  # set according to ibor currency and swap tenor
+            tenor = NULL,   # set according to ibor currency and swap tenor
+            dayCount = NULL,# or "Actual360", "Thirty360", "Actual365Fixed"
         ),
         floatingLeg = list(
-            tenor = NULL  # set according to ibor currency and swap tenor
+            tenor = NULL,   # set according to ibor currency and swap tenor
+            dayCount = NULL,# or "Actual360", "Thirty360", "Actual365Fixed"
         ),
         pricingEngine = list(
             class = "DiscountingSwapEngine"
@@ -30,10 +32,12 @@ BlackStyleSwaption.default  <- function(
             tenor = 6 * Period$Months
         ),
         fixedLeg = list(
-            tenor = NULL  # set according to ibor currency and swap tenor
+            tenor = NULL,   # set according to ibor currency and swap tenor
+            dayCount = NULL,# or "Actual360", "Thirty360", "Actual365Fixed"
         ),
         floatingLeg = list(
-            tenor = NULL  # set according to ibor currency and swap tenor
+            tenor = NULL,   # set according to ibor currency and swap tenor
+            dayCount = NULL,# or "Actual360", "Thirty360", "Actual365Fixed"
         ),
         pricingEngine = list(
             class = "DiscountingSwapEngine"
@@ -87,11 +91,29 @@ BlackStyleSwaption.default  <- function(
     if(!("tenor" %in% names(call$fixedLeg))){
         call$fixedLeg <- c(call$fixedLeg, list(tenor = NULL))
     }
+    if(!is.null(call$fixedLeg$tenor) && !is.numeric(call$fixedLeg$tenor)){
+        stop("'call$fixedLeg$tenor' must be numeric", call. = FALSE)
+    }
+    if(!("dayCount" %in% names(call$fixedLeg))){
+        call$fixedLeg <- c(call$fixedLeg, list(dayCount = NULL))
+    }
+    if(!is.null(call$fixedLeg$dayCount) && !(call$fixedLeg$dayCount %in% c("Actual360", "Thirty360", "Actual365Fixed"))){
+        stop("'call$fixedLeg$dayCount' must be \"Actual360\", \"Thirty360\" or \"Actual365Fixed\"", call. = FALSE)
+    }
     if(!is.list(call$floatingLeg)){
         call$floatingLeg = list()
     }
     if(!("tenor" %in% names(call$floatingLeg))){
         call$floatingLeg <- c(call$floatingLeg, list(tenor = NULL))
+    }
+    if(!is.null(call$floatingLeg$tenor) && !is.numeric(call$floatingLeg$tenor)){
+        stop("'call$floatingLeg$tenor' must be numeric", call. = FALSE)
+    }
+    if(!("dayCount" %in% names(call$floatingLeg))){
+        call$floatingLeg <- c(call$floatingLeg, list(dayCount = NULL))
+    }
+    if(!is.null(call$floatingLeg$dayCount) && !(call$floatingLeg$dayCount %in% c("Actual360", "Thirty360", "Actual365Fixed"))){
+        stop("'call$floatingLeg$dayCount' must be \"Actual360\", \"Thirty360\" or \"Actual365Fixed\"", call. = FALSE)
     }
     if (!is.list(call$pricingEngine)) {
         call$pricingEngine = list()
@@ -158,11 +180,29 @@ BlackStyleSwaption.default  <- function(
     if(!("tenor" %in% names(put$fixedLeg))){
         put$fixedLeg <- c(put$fixedLeg, list(tenor = NULL))
     }
+    if(!is.null(put$fixedLeg$tenor) && !is.numeric(put$fixedLeg$tenor)){
+        stop("'put$fixedLeg$tenor' must be numeric", call. = FALSE)
+    }
+    if(!("dayCount" %in% names(put$fixedLeg))){
+        put$fixedLeg <- c(put$fixedLeg, list(dayCount = NULL))
+    }
+    if(!is.null(put$fixedLeg$dayCount) && !(put$fixedLeg$dayCount %in% c("Actual360", "Thirty360", "Actual365Fixed"))){
+        stop("'put$fixedLeg$dayCount' must be \"Actual360\", \"Thirty360\" or \"Actual365Fixed\"", put. = FALSE)
+    }
     if(!is.list(put$floatingLeg)){
         put$floatingLeg = list()
     }
     if(!("tenor" %in% names(put$floatingLeg))){
         put$floatingLeg <- c(put$floatingLeg, list(tenor = NULL))
+    }
+    if(!is.null(put$floatingLeg$tenor) && !is.numeric(put$floatingLeg$tenor)){
+        stop("'put$floatingLeg$tenor' must be numeric", call. = FALSE)
+    }
+    if(!("dayCount" %in% names(put$floatingLeg))){
+        put$floatingLeg <- c(put$floatingLeg, list(dayCount = NULL))
+    }
+    if(!is.null(put$floatingLeg$dayCount) && !(put$floatingLeg$dayCount %in% c("Actual360", "Thirty360", "Actual365Fixed"))){
+        stop("'put$floatingLeg$dayCount' must be \"Actual360\", \"Thirty360\" or \"Actual365Fixed\"", put. = FALSE)
     }
     if (!is.list(put$pricingEngine)) {
         put$pricingEngine = list()

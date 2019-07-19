@@ -24,6 +24,26 @@ QuantLib::Period tenor(Rcpp::List& l, std::string s = "tenor") {
     }
 }
 
+QuantLib::DayCounter day_count(std::string s) {
+    if (s == "Actual360") {
+        return Actual360();
+    } else if (s == "Thirty360") {
+        return Thirty360(Thirty360::BondBasis);
+    } else if (s == "Actual365Fixed") {
+        return Actual365Fixed();
+    } else {
+        Rcpp::stop("'dayCount' must be \"Actual360\", \"Thirty360\" or \"Actual365Fixed\"");
+    }
+}
+
+QuantLib::DayCounter day_count(Rcpp::List& l, std::string s = "dayCount") {
+    if (l[s] == R_NilValue) {
+        return QuantLib::DayCounter();
+    } else {
+        return day_count(Rcpp::as<std::string>(l[s]));
+    }
+}
+
 
 // [[Rcpp::export]]
 Rcpp::List black_style_swaption(Rcpp::List call,
@@ -72,14 +92,18 @@ Rcpp::List black_style_swaption(Rcpp::List call,
         MakeVanillaSwap(tenor(call), iborIndex1_ptr, strike)
         .withEffectiveDate(Rcpp::as<QuantLib::Date>(call["effectiveDate"]))
         .withFixedLegTenor(tenor(call_fixedLeg))
+        .withFixedLegDayCount(day_count(call_fixedLeg))
         .withFloatingLegTenor(tenor(call_floatingLeg))
+        .withFloatingLegDayCount(day_count(call_floatingLeg))
         .receiveFixed(Rcpp::as<bool>(call["receiveFixed"]));
 
     QuantLib::ext::shared_ptr<VanillaSwap> underlyingPut =
         MakeVanillaSwap(tenor(put), iborIndex2_ptr, strike)
         .withEffectiveDate(Rcpp::as<QuantLib::Date>(put["effectiveDate"]))
         .withFixedLegTenor(tenor(put_fixedLeg))
+        .withFixedLegDayCount(day_count(put_fixedLeg))
         .withFloatingLegTenor(tenor(put_floatingLeg))
+        .withFloatingLegDayCount(day_count(put_floatingLeg))
         .receiveFixed(Rcpp::as<bool>(put["receiveFixed"]));
 
     // Create pricing engines for swaps
