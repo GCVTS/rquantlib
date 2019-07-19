@@ -16,11 +16,11 @@ QuantLib::Period tenor(double x) {
     }
 }
 
-QuantLib::Period tenor(Rcpp::List& l, std::string s = "tenor") {
-    if (l[s] == R_NilValue) {
-        return QuantLib::Period();
-    } else {
+QuantLib::Period tenor(Rcpp::List& l, QuantLib::Period p = QuantLib::Period(), std::string s = "tenor") {
+    if (l[s] != R_NilValue) {
         return tenor(Rcpp::as<double>(l[s]));
+    } else {
+        return p;
     }
 }
 
@@ -36,11 +36,11 @@ QuantLib::DayCounter day_count(std::string s) {
     }
 }
 
-QuantLib::DayCounter day_count(Rcpp::List& l, std::string s = "dayCount") {
-    if (l[s] == R_NilValue) {
-        return QuantLib::DayCounter();
-    } else {
+QuantLib::DayCounter day_count(Rcpp::List& l, QuantLib::DayCounter dc = QuantLib::DayCounter(), std::string s = "dayCount") {
+    if (l[s] != R_NilValue) {
         return day_count(Rcpp::as<std::string>(l[s]));
+    } else {
+        return dc;
     }
 }
 
@@ -93,8 +93,8 @@ Rcpp::List black_style_swaption(Rcpp::List call,
         .withEffectiveDate(Rcpp::as<QuantLib::Date>(call["effectiveDate"]))
         .withFixedLegTenor(tenor(call_fixedLeg))
         .withFixedLegDayCount(day_count(call_fixedLeg))
-        .withFloatingLegTenor(tenor(call_floatingLeg))
-        .withFloatingLegDayCount(day_count(call_floatingLeg))
+        .withFloatingLegTenor(tenor(call_floatingLeg, iborIndex1_ptr->tenor()))
+        .withFloatingLegDayCount(day_count(call_floatingLeg, iborIndex1_ptr->dayCounter()))
         .receiveFixed(Rcpp::as<bool>(call["receiveFixed"]));
 
     QuantLib::ext::shared_ptr<VanillaSwap> underlyingPut =
@@ -102,8 +102,8 @@ Rcpp::List black_style_swaption(Rcpp::List call,
         .withEffectiveDate(Rcpp::as<QuantLib::Date>(put["effectiveDate"]))
         .withFixedLegTenor(tenor(put_fixedLeg))
         .withFixedLegDayCount(day_count(put_fixedLeg))
-        .withFloatingLegTenor(tenor(put_floatingLeg))
-        .withFloatingLegDayCount(day_count(put_floatingLeg))
+        .withFloatingLegTenor(tenor(put_floatingLeg, iborIndex2_ptr->tenor()))
+        .withFloatingLegDayCount(day_count(put_floatingLeg, iborIndex1_ptr->dayCounter()))
         .receiveFixed(Rcpp::as<bool>(put["receiveFixed"]));
 
     // Create pricing engines for swaps

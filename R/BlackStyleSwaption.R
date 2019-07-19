@@ -12,11 +12,11 @@ BlackStyleSwaption.default  <- function(
         ),
         fixedLeg = list(
             tenor = NULL,   # set according to ibor currency and swap tenor
-            dayCount = NULL,# or "Actual360", "Thirty360", "Actual365Fixed"
+            dayCount = NULL # or "Actual360", "Thirty360", "Actual365Fixed"
         ),
         floatingLeg = list(
             tenor = NULL,   # set according to ibor currency and swap tenor
-            dayCount = NULL,# or "Actual360", "Thirty360", "Actual365Fixed"
+            dayCount = NULL # or "Actual360", "Thirty360", "Actual365Fixed"
         ),
         pricingEngine = list(
             class = "DiscountingSwapEngine"
@@ -33,11 +33,11 @@ BlackStyleSwaption.default  <- function(
         ),
         fixedLeg = list(
             tenor = NULL,   # set according to ibor currency and swap tenor
-            dayCount = NULL,# or "Actual360", "Thirty360", "Actual365Fixed"
+            dayCount = NULL # or "Actual360", "Thirty360", "Actual365Fixed"
         ),
         floatingLeg = list(
             tenor = NULL,   # set according to ibor currency and swap tenor
-            dayCount = NULL,# or "Actual360", "Thirty360", "Actual365Fixed"
+            dayCount = NULL # or "Actual360", "Thirty360", "Actual365Fixed"
         ),
         pricingEngine = list(
             class = "DiscountingSwapEngine"
@@ -187,7 +187,7 @@ BlackStyleSwaption.default  <- function(
         put$fixedLeg <- c(put$fixedLeg, list(dayCount = NULL))
     }
     if(!is.null(put$fixedLeg$dayCount) && !(put$fixedLeg$dayCount %in% c("Actual360", "Thirty360", "Actual365Fixed"))){
-        stop("'put$fixedLeg$dayCount' must be \"Actual360\", \"Thirty360\" or \"Actual365Fixed\"", put. = FALSE)
+        stop("'put$fixedLeg$dayCount' must be \"Actual360\", \"Thirty360\" or \"Actual365Fixed\"", call. = FALSE)
     }
     if(!is.list(put$floatingLeg)){
         put$floatingLeg = list()
@@ -202,7 +202,7 @@ BlackStyleSwaption.default  <- function(
         put$floatingLeg <- c(put$floatingLeg, list(dayCount = NULL))
     }
     if(!is.null(put$floatingLeg$dayCount) && !(put$floatingLeg$dayCount %in% c("Actual360", "Thirty360", "Actual365Fixed"))){
-        stop("'put$floatingLeg$dayCount' must be \"Actual360\", \"Thirty360\" or \"Actual365Fixed\"", put. = FALSE)
+        stop("'put$floatingLeg$dayCount' must be \"Actual360\", \"Thirty360\" or \"Actual365Fixed\"", call. = FALSE)
     }
     if (!is.list(put$pricingEngine)) {
         put$pricingEngine = list()
