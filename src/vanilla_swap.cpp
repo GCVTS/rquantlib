@@ -9,10 +9,18 @@ QuantLib::Period tenor(Rcpp::List& l, QuantLib::Period p = QuantLib::Period(), s
 QuantLib::DayCounter day_count(std::string s);
 QuantLib::DayCounter day_count(Rcpp::List& l, QuantLib::DayCounter dc = QuantLib::DayCounter(), std::string s = "dayCount");
 
+QuantLib::Rate rate(SEXP& x) {
+    if (x != R_NilValue) {
+        return Rcpp::as<QuantLib::Rate>(x);
+    } else {
+        return QuantLib::Null<QuantLib::Rate>();
+    }
+}
+
 
 // [[Rcpp::export]]
 Rcpp::List vanilla_swap(Rcpp::List swap,
-                        double fixedRate,
+                        SEXP fixedRate,
                         std::vector<QuantLib::Date> dateVec,
                         std::vector<double> zeroVec){
 
@@ -36,7 +44,7 @@ Rcpp::List vanilla_swap(Rcpp::List swap,
 
     // Create swap
     QuantLib::ext::shared_ptr<VanillaSwap> swap1 =
-        MakeVanillaSwap(tenor(swap), iborIndex1_ptr, fixedRate)
+        MakeVanillaSwap(tenor(swap), iborIndex1_ptr, rate(fixedRate))
         .withEffectiveDate(Rcpp::as<QuantLib::Date>(swap["effectiveDate"]))
         .withFixedLegTenor(tenor(swap_fixedLeg))
         .withFixedLegDayCount(day_count(swap_fixedLeg))

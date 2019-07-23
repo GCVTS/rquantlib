@@ -24,7 +24,7 @@ VanillaSwap.default  <- function(
         effectiveDate = NULL,
         receiveFixed = TRUE
     ),
-    fixedRate
+    fixedRate = NULL  # let MakeVanillaSwap() compute the rate
 ){
     if(class(ts)!="DiscountCurve"){
         stop("'ts' must be DiscountCurve", call. = FALSE)
@@ -112,7 +112,7 @@ VanillaSwap.default  <- function(
         stop("'swap$receiveFixed' must be logical", call. = FALSE)
     }
 
-    if(!is.numeric(fixedRate)){
+    if(!is.null(fixedRate) && !is.numeric(fixedRate)){
         stop("'fixedRate' must be numeric", call. = FALSE)
     }
     

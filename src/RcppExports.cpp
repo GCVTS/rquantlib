@@ -1637,13 +1637,13 @@ RcppExport SEXP _RQuantLib_europeanOptionArraysEngine(SEXP typeSEXP, SEXP parSEX
     return rcpp_result_gen;
 }
 // vanilla_swap
-Rcpp::List vanilla_swap(Rcpp::List swap, double fixedRate, std::vector<QuantLib::Date> dateVec, std::vector<double> zeroVec);
+Rcpp::List vanilla_swap(Rcpp::List swap, SEXP fixedRate, std::vector<QuantLib::Date> dateVec, std::vector<double> zeroVec);
 RcppExport SEXP _RQuantLib_vanilla_swap(SEXP swapSEXP, SEXP fixedRateSEXP, SEXP dateVecSEXP, SEXP zeroVecSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::List >::type swap(swapSEXP);
-    Rcpp::traits::input_parameter< double >::type fixedRate(fixedRateSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type fixedRate(fixedRateSEXP);
     Rcpp::traits::input_parameter< std::vector<QuantLib::Date> >::type dateVec(dateVecSEXP);
     Rcpp::traits::input_parameter< std::vector<double> >::type zeroVec(zeroVecSEXP);
     rcpp_result_gen = Rcpp::wrap(vanilla_swap(swap, fixedRate, dateVec, zeroVec));
