@@ -1636,6 +1636,20 @@ RcppExport SEXP _RQuantLib_europeanOptionArraysEngine(SEXP typeSEXP, SEXP parSEX
     UNPROTECT(1);
     return rcpp_result_gen;
 }
+// vanilla_swap
+Rcpp::List vanilla_swap(Rcpp::List swap, double fixedRate, std::vector<QuantLib::Date> dateVec, std::vector<double> zeroVec);
+RcppExport SEXP _RQuantLib_vanilla_swap(SEXP swapSEXP, SEXP fixedRateSEXP, SEXP dateVecSEXP, SEXP zeroVecSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type swap(swapSEXP);
+    Rcpp::traits::input_parameter< double >::type fixedRate(fixedRateSEXP);
+    Rcpp::traits::input_parameter< std::vector<QuantLib::Date> >::type dateVec(dateVecSEXP);
+    Rcpp::traits::input_parameter< std::vector<double> >::type zeroVec(zeroVecSEXP);
+    rcpp_result_gen = Rcpp::wrap(vanilla_swap(swap, fixedRate, dateVec, zeroVec));
+    return rcpp_result_gen;
+END_RCPP
+}
 // zeroprice
 double zeroprice(double yield, QuantLib::Date maturity, QuantLib::Date settle, int period, int basis);
 RcppExport SEXP _RQuantLib_zeroprice(SEXP yieldSEXP, SEXP maturitySEXP, SEXP settleSEXP, SEXP periodSEXP, SEXP basisSEXP) {
@@ -1804,6 +1818,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RQuantLib_europeanOptionEngine", (DL_FUNC) &_RQuantLib_europeanOptionEngine, 9},
     {"_RQuantLib_americanOptionEngine", (DL_FUNC) &_RQuantLib_americanOptionEngine, 12},
     {"_RQuantLib_europeanOptionArraysEngine", (DL_FUNC) &_RQuantLib_europeanOptionArraysEngine, 2},
+    {"_RQuantLib_vanilla_swap", (DL_FUNC) &_RQuantLib_vanilla_swap, 4},
     {"_RQuantLib_zeroprice", (DL_FUNC) &_RQuantLib_zeroprice, 5},
     {"_RQuantLib_zeroyield", (DL_FUNC) &_RQuantLib_zeroyield, 5},
     {"_rcpp_module_boot_BlackMod", (DL_FUNC) &_rcpp_module_boot_BlackMod, 0},

@@ -248,6 +248,10 @@ europeanOptionArraysEngine <- function(type, par) {
     .Call(`_RQuantLib_europeanOptionArraysEngine`, type, par)
 }
 
+vanilla_swap <- function(swap, fixedRate, dateVec, zeroVec) {
+    .Call(`_RQuantLib_vanilla_swap`, swap, fixedRate, dateVec, zeroVec)
+}
+
 zeroprice <- function(yield, maturity, settle, period, basis) {
     .Call(`_RQuantLib_zeroprice`, yield, maturity, settle, period, basis)
 }
