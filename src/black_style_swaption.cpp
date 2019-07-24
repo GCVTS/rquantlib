@@ -44,6 +44,28 @@ QuantLib::DayCounter day_count(Rcpp::List& l, QuantLib::DayCounter dc = QuantLib
     }
 }
 
+Rcpp::List map_to_list(const std::map<std::string, boost::any>& m) {
+    Rcpp::List l;
+    Rcpp::CharacterVector l_names;
+    
+    for (auto const& x : m) {
+        l_names.push_back(x.first);
+
+        if (x.second.type() == typeid(int)) {
+            l.push_back(boost::any_cast<int>(x.second));
+        } else if (x.second.type() == typeid(double)) {
+            l.push_back(boost::any_cast<double>(x.second));
+        } else if (x.second.type() == typeid(std::string)) {
+            l.push_back(boost::any_cast<std::string>(x.second));
+        } else {
+            std::cerr << "unknown value type for: " << x.first << std::endl;
+        }
+    }
+
+    l.attr("names") = l_names;
+    return l;
+}
+
 
 // [[Rcpp::export]]
 Rcpp::List black_style_swaption(Rcpp::List call,
@@ -160,8 +182,15 @@ Rcpp::List black_style_swaption(Rcpp::List call,
     Real pricePay = swaptionC.NPV();
     Real priceRcv = swaptionP.NPV();
 
+    // Retrieve additional results
+    Rcpp::List additionalResults = Rcpp::List::create(
+        Rcpp::Named("call") = map_to_list(swaptionC.additionalResults()),
+        Rcpp::Named("put") = map_to_list(swaptionP.additionalResults())
+    );
+
     return Rcpp::List::create(Rcpp::Named("pay") = pricePay,
                               Rcpp::Named("rcv") = priceRcv,
                               Rcpp::Named("sigma") = vol,
-                              Rcpp::Named("atmRate") = rate);
+                              Rcpp::Named("atmRate") = rate,
+                              Rcpp::Named("additionalResults") = additionalResults);
 }
