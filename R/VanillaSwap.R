@@ -6,7 +6,7 @@ VanillaSwap.default  <- function(
     ts,
     swap = list(
         iborIndex = list(
-            class = "Euribor",  # or "USDLibor"
+            class = "Euribor",  # or "USDLibor", "GBPLibor", "JPYLibor", "Bbsw"
             tenor = 6 * Period$Months
         ),
         fixedLeg = list(
@@ -40,8 +40,8 @@ VanillaSwap.default  <- function(
         swap$iborIndex$class = "Euribor"
         warning("'swap$iborIndex$class' not set, defaulting to \"Euribor\"", call. = FALSE)
     }
-    if(!(swap$iborIndex$class %in% c("Euribor", "USDLibor"))){
-        stop("'swap$iborIndex$class' must be \"Euribor\" or \"USDLibor\"", call. = FALSE)
+    if(!(swap$iborIndex$class %in% c("Euribor", "USDLibor", "GBPLibor", "JPYLibor", "Bbsw"))){
+        stop("'swap$iborIndex$class' must be \"Euribor\", \"USDLibor\", \"GBPLibor\", \"JPYLibor\" or \"Bbsw\"", call. = FALSE)
     }
     if(is.null(swap$iborIndex$tenor)){
         swap$iborIndex$tenor = 6 * Period$Months

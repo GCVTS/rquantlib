@@ -7,7 +7,7 @@ BlackStyleSwaption.default  <- function(
     call = list(
         class = "VanillaSwap",
         iborIndex = list(
-            class = "Euribor",  # or "USDLibor"
+            class = "Euribor",  # or "USDLibor", "GBPLibor", "JPYLibor", "Bbsw"
             tenor = 6 * Period$Months
         ),
         fixedLeg = list(
@@ -28,7 +28,7 @@ BlackStyleSwaption.default  <- function(
     put = list(
         class = "VanillaSwap",
         iborIndex = list(
-            class = "Euribor",  # or "USDLibor"
+            class = "Euribor",  # or "USDLibor", "GBPLibor", "JPYLibor", "Bbsw"
             tenor = 6 * Period$Months
         ),
         fixedLeg = list(
@@ -75,8 +75,8 @@ BlackStyleSwaption.default  <- function(
         call$iborIndex$class = "Euribor"
         warning("'call$iborIndex$class' not set, defaulting to \"Euribor\"", call. = FALSE)
     }
-    if(!(call$iborIndex$class %in% c("Euribor", "USDLibor"))){
-        stop("'call$iborIndex$class' must be \"Euribor\" or \"USDLibor\"", call. = FALSE)
+    if(!(call$iborIndex$class %in% c("Euribor", "USDLibor", "GBPLibor", "JPYLibor", "Bbsw"))){
+        stop("'call$iborIndex$class' must be \"Euribor\", \"USDLibor\", \"GBPLibor\", \"JPYLibor\" or \"Bbsw\"", call. = FALSE)
     }
     if(is.null(call$iborIndex$tenor)){
         call$iborIndex$tenor = 6 * Period$Months
@@ -164,8 +164,8 @@ BlackStyleSwaption.default  <- function(
         put$iborIndex$class = "Euribor"
         warning("'put$iborIndex$class' not set, defaulting to \"Euribor\"", call. = FALSE)
     }
-    if(!(put$iborIndex$class %in% c("Euribor", "USDLibor"))){
-        stop("'put$iborIndex$class' must be \"Euribor\" or \"USDLibor\"", call. = FALSE)
+    if(!(put$iborIndex$class %in% c("Euribor", "USDLibor", "GBPLibor", "JPYLibor", "Bbsw"))){
+        stop("'put$iborIndex$class' must be \"Euribor\", \"USDLibor\", \"GBPLibor\", \"JPYLibor\" or \"Bbsw\"", call. = FALSE)
     }
     if(is.null(put$iborIndex$tenor)){
         put$iborIndex$tenor = 6 * Period$Months

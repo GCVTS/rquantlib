@@ -94,8 +94,14 @@ Rcpp::List black_style_swaption(Rcpp::List call,
         iborIndex1 = new Euribor(tenor(call_iborIndex), yldCrv);
     } else if (Rcpp::as<std::string>(call_iborIndex["class"]) == "USDLibor") {
         iborIndex1 = new USDLibor(tenor(call_iborIndex), yldCrv);
+    } else if (Rcpp::as<std::string>(call_iborIndex["class"]) == "GBPLibor") {
+        iborIndex1 = new GBPLibor(tenor(call_iborIndex), yldCrv);
+    } else if (Rcpp::as<std::string>(call_iborIndex["class"]) == "JPYLibor") {
+        iborIndex1 = new JPYLibor(tenor(call_iborIndex), yldCrv);
+    } else if (Rcpp::as<std::string>(call_iborIndex["class"]) == "Bbsw") {
+        iborIndex1 = new Bbsw(tenor(call_iborIndex), yldCrv);
     } else {
-        Rcpp::stop("'call$iborIndex$class' must be \"Euribor\" or \"USDLibor\"");
+        Rcpp::stop("'call$iborIndex$class' must be \"Euribor\", \"USDLibor\", \"GBPLibor\", \"JPYLibor\" or \"Bbsw\"");
     }
     QuantLib::ext::shared_ptr<IborIndex> iborIndex1_ptr(iborIndex1);
 
@@ -104,8 +110,14 @@ Rcpp::List black_style_swaption(Rcpp::List call,
         iborIndex2 = new Euribor(tenor(put_iborIndex), yldCrv);
     } else if (Rcpp::as<std::string>(put_iborIndex["class"]) == "USDLibor") {
         iborIndex2 = new USDLibor(tenor(put_iborIndex), yldCrv);
+    } else if (Rcpp::as<std::string>(put_iborIndex["class"]) == "GBPLibor") {
+        iborIndex2 = new GBPLibor(tenor(put_iborIndex), yldCrv);
+    } else if (Rcpp::as<std::string>(put_iborIndex["class"]) == "JPYLibor") {
+        iborIndex2 = new JPYLibor(tenor(put_iborIndex), yldCrv);
+    } else if (Rcpp::as<std::string>(put_iborIndex["class"]) == "Bbsw") {
+        iborIndex2 = new Bbsw(tenor(put_iborIndex), yldCrv);
     } else {
-        Rcpp::stop("'put$iborIndex$class' must be \"Euribor\" or \"USDLibor\"");
+        Rcpp::stop("'put$iborIndex$class' must be \"Euribor\", \"USDLibor\", \"GBPLibor\", \"JPYLibor\" or \"Bbsw\"");
     }
     QuantLib::ext::shared_ptr<IborIndex> iborIndex2_ptr(iborIndex2);
 

@@ -37,8 +37,14 @@ Rcpp::List vanilla_swap(Rcpp::List swap,
         iborIndex1 = new Euribor(tenor(swap_iborIndex), yldCrv);
     } else if (Rcpp::as<std::string>(swap_iborIndex["class"]) == "USDLibor") {
         iborIndex1 = new USDLibor(tenor(swap_iborIndex), yldCrv);
+    } else if (Rcpp::as<std::string>(swap_iborIndex["class"]) == "GBPLibor") {
+        iborIndex1 = new GBPLibor(tenor(swap_iborIndex), yldCrv);
+    } else if (Rcpp::as<std::string>(swap_iborIndex["class"]) == "JPYLibor") {
+        iborIndex1 = new JPYLibor(tenor(swap_iborIndex), yldCrv);
+    } else if (Rcpp::as<std::string>(swap_iborIndex["class"]) == "Bbsw") {
+        iborIndex1 = new Bbsw(tenor(swap_iborIndex), yldCrv);
     } else {
-        Rcpp::stop("'swap$iborIndex$class' must be \"Euribor\" or \"USDLibor\"");
+        Rcpp::stop("'swap$iborIndex$class' must be \"Euribor\", \"USDLibor\", \"GBPLibor\", \"JPYLibor\" or \"Bbsw\"");
     }
     QuantLib::ext::shared_ptr<IborIndex> iborIndex1_ptr(iborIndex1);
 
