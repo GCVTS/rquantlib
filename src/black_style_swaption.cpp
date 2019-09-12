@@ -86,7 +86,17 @@ Rcpp::List black_style_swaption(Rcpp::List call,
     Rcpp::List put_floatingLeg = Rcpp::as<Rcpp::List>(call["floatingLeg"]);
     Rcpp::List put_pricingEngine = Rcpp::as<Rcpp::List>(put["pricingEngine"]);
     
-    QuantLib::Handle<QuantLib::YieldTermStructure> yldCrv(rebuildCurveFromZeroRates(dateVec, zeroVec));
+    // Rebuild yield curve
+    YieldTermStructure* rebuiltCurve;
+    if (volType == "ShiftedLognormal") {
+        rebuiltCurve = new InterpolatedZeroCurve<LogLinear>(dateVec, zeroVec, QuantLib::ActualActual());
+    } else if (volType == "Normal") {
+        rebuiltCurve = new InterpolatedZeroCurve<Linear>(dateVec, zeroVec, QuantLib::ActualActual());
+    } else {
+        Rcpp::stop("'volType' must be \"ShiftedLognormal\" or \"Normal\"");
+    }
+    QuantLib::ext::shared_ptr<YieldTermStructure> rebuiltCurve_ptr(rebuiltCurve);
+    QuantLib::Handle<YieldTermStructure> yldCrv(rebuiltCurve_ptr);
 
     // Create IborIndex objects for swaps
     IborIndex* iborIndex1;
