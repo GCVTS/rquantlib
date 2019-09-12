@@ -29,7 +29,11 @@ Rcpp::List vanilla_swap(Rcpp::List swap,
     Rcpp::List swap_floatingLeg = Rcpp::as<Rcpp::List>(swap["floatingLeg"]);
     Rcpp::List swap_pricingEngine = Rcpp::as<Rcpp::List>(swap["pricingEngine"]);
 
-    QuantLib::Handle<QuantLib::YieldTermStructure> yldCrv(rebuildCurveFromZeroRates(dateVec, zeroVec));
+    // Rebuild yield curve
+    YieldTermStructure* rebuiltCurve;
+    rebuiltCurve = new InterpolatedZeroCurve<Linear>(dateVec, zeroVec, QuantLib::ActualActual());
+    QuantLib::ext::shared_ptr<YieldTermStructure> rebuiltCurve_ptr(rebuiltCurve);
+    QuantLib::Handle<YieldTermStructure> yldCrv(rebuiltCurve_ptr);
 
     // Create IborIndex object for swap
     IborIndex* iborIndex1;
