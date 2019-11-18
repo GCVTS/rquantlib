@@ -29,9 +29,13 @@ Rcpp::List vanilla_swap(Rcpp::List swap,
     Rcpp::List swap_floatingLeg = Rcpp::as<Rcpp::List>(swap["floatingLeg"]);
     Rcpp::List swap_pricingEngine = Rcpp::as<Rcpp::List>(swap["pricingEngine"]);
 
-    // Rebuild yield curve
+    // Rebuild yield curve, see Prototypes#139 for hacks
     YieldTermStructure* rebuiltCurve;
-    rebuiltCurve = new InterpolatedZeroCurve<Linear>(dateVec, zeroVec, QuantLib::ActualActual());
+    if (dateVec.size() == 1 && zeroVec.size() == 1) {
+        rebuiltCurve = new FlatForward(dateVec[0], zeroVec[0], QuantLib::ActualActual());
+    } else {
+        rebuiltCurve = new InterpolatedZeroCurve<Linear>(dateVec, zeroVec, QuantLib::ActualActual());
+    }
     QuantLib::ext::shared_ptr<YieldTermStructure> rebuiltCurve_ptr(rebuiltCurve);
     QuantLib::Handle<YieldTermStructure> yldCrv(rebuiltCurve_ptr);
 

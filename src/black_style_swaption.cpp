@@ -86,9 +86,11 @@ Rcpp::List black_style_swaption(Rcpp::List call,
     Rcpp::List put_floatingLeg = Rcpp::as<Rcpp::List>(call["floatingLeg"]);
     Rcpp::List put_pricingEngine = Rcpp::as<Rcpp::List>(put["pricingEngine"]);
     
-    // Rebuild yield curve
+    // Rebuild yield curve, see Prototypes#139 for hacks
     YieldTermStructure* rebuiltCurve;
-    if (volType == "ShiftedLognormal") {
+    if (dateVec.size() == 1 && zeroVec.size() == 1) {
+        rebuiltCurve = new FlatForward(dateVec[0], zeroVec[0], QuantLib::ActualActual());
+    } else if (volType == "ShiftedLognormal") {
         rebuiltCurve = new InterpolatedZeroCurve<LogLinear>(dateVec, zeroVec, QuantLib::ActualActual());
     } else if (volType == "Normal") {
         rebuiltCurve = new InterpolatedZeroCurve<Linear>(dateVec, zeroVec, QuantLib::ActualActual());
